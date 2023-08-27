@@ -1,0 +1,120 @@
+<Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
+	<Script file="TableBrowser.lua" />
+	<Frame name="Poker_TableBrowser" parent="UIParent" movable="true" enableMouse="true" clampedToScreen="true" inherits="BackdropTemplate">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" type="global" />
+		</KeyValues>
+		<Size>
+			<AbsDimension x="384" y="350" />
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="200" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer>
+				<Texture name="$parentTitle" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="375" y="64" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString inherits="GameFontNormal" text="POKER_BROWSER_TITLE">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentTitle">
+							<Offset>
+								<AbsDimension x="0" y="-14" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				self:RegisterForDrag("LeftButton")
+				self:SetUserPlaced(1)
+			</OnLoad>
+			<OnDragStart>
+				self:StartMoving()
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing()
+			</OnDragStop>
+		</Scripts>
+		<Frames>
+			<Button name="$parentTestButton" text="Test :)" inherits="UIPanelButtonTemplate">
+				<Size>
+					<AbsDimension x="96" y="32"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER"/>
+				</Anchors>
+				<Scripts>
+					<OnLoad>
+						self:RegisterForClicks(
+						"LeftButtonUp",
+						"RightButtonUp",
+						"MiddleButtonDown"
+						)
+					</OnLoad>
+					<OnClick>
+						print("Clicked with", button)
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
+	</Frame>
+	<Frame name="Poker_TableBrowserX" parent="UIParent" inherits="BackdropTemplate" movable="true" enableMouse="true" clampedToScreen="true">
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" type="global" />
+		</KeyValues>
+		<Size>
+			<AbsDimension x="384" y="350" />
+		</Size>
+		<Anchors>
+			<Anchor point="LEFT" relativePoint="CENTER">
+				<Offset>
+					<AbsDimension x="-200" y="0" />
+				</Offset>
+			</Anchor>
+		</Anchors>
+		<Layers>
+			<Layer>
+				<Texture name="$parentTitle" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="375" y="64" />
+					</Size>
+					<Anchors>
+						<Anchor point="TOP">
+							<Offset>
+								<AbsDimension x="0" y="12" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString inherits="GameFontNormal" text="POKER_BROWSER_TITLE">
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parentTitle">
+							<Offset>
+								<AbsDimension x="0" y="-14" />
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad></OnLoad>
+		</Scripts>
+	</Frame>
+</Ui>
