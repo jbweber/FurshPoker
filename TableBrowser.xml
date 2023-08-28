@@ -1,9 +1,46 @@
 <Ui xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.blizzard.com/wow/ui/">
-	<Script file="TableBrowser.lua" />
-	<Frame name="Poker_TableBrowser" parent="UIParent" movable="true" enableMouse="true" clampedToScreen="true" inherits="BackdropTemplate">
-		<KeyValues>
-			<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" type="global" />
-		</KeyValues>
+
+	<!-- start table browser header template -->
+	<Button name="Poker_TableBrowserHeader" virtual="true">
+		<Scripts>
+			<OnClick>
+				Poker_TableBrowser.SortTables(this:GetID())
+				PlaySound("igMainMenuOptionCheckBoxOn")				
+			</OnClick>
+			<OnEnter>
+				getglobal(self:GetName().."BG"):SetVertexColor(1, 1, 1, 1)
+			</OnEnter>
+			<OnLeave>
+				getglobal(self:GetName().."BG"):SetVertexColor(0.7, 0.7, 0.7, 0.7)
+			</OnLeave>
+			<OnLoad>
+				self:GetScript("OnLeave")(self)
+			</OnLoad>
+		</Scripts>
+		<ButtonText>
+			<Anchors>
+				<Anchor point="LEFT">
+					<Offset>
+						<AbsDimension x="4" y="0"/>
+					</Offset>
+				</Anchor>
+			</Anchors>
+		</ButtonText>
+		<NormalFont style="GameFontHighlight"/>
+		<HighlightFont style="GameFontNormal"/>
+		<NormalTexture name="$parentBG">
+			<Color r="0.4" g="0.4" b="0.4" a="0.4"/>
+		</NormalTexture>
+	</Button>
+	<!-- stop table browser header template -->
+
+	<!-- start table browser entry template -->
+	<Button name="Poker_TableBrowserEntry" virtual="true">
+		
+	</Button>
+	<!-- stop table browser entry template -->
+	
+	<Frame name="Poker_TableBrowser" inherits="BackdropTemplate" frameStrata="DIALOG" hidden="false" parent="UIParent" movable="true" enableMouse="true" clampedToScreen="true">
 		<Size>
 			<AbsDimension x="384" y="350" />
 		</Size>
@@ -14,8 +51,11 @@
 				</Offset>
 			</Anchor>
 		</Anchors>
+		<KeyValues>
+			<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" keyType="string" type="global" />
+		</KeyValues>
 		<Layers>
-			<Layer>
+			<Layer level="ARTWORK">
 				<Texture name="$parentTitle" file="Interface\DialogFrame\UI-DialogBox-Header">
 					<Size>
 						<AbsDimension x="375" y="64" />
@@ -40,7 +80,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>
+			<OnLoad inherit="prepend">
 				self:RegisterForDrag("LeftButton")
 				self:SetUserPlaced(1)
 			</OnLoad>
@@ -52,69 +92,87 @@
 			</OnDragStop>
 		</Scripts>
 		<Frames>
-			<Button name="$parentTestButton" text="Test :)" inherits="UIPanelButtonTemplate">
+			<!-- start close button -->
+			<Button name="$parentClose" text="POKER_BROWSER_CLOSE" inherits="UIPanelButtonTemplate">
 				<Size>
-					<AbsDimension x="96" y="32"/>
+					<AbsDimension x="64" y="24"/>
 				</Size>
 				<Anchors>
-					<Anchor point="CENTER"/>
+					<Anchor point="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="15"/>
+						</Offset>
+					</Anchor>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						self:RegisterForClicks(
-						"LeftButtonUp",
-						"RightButtonUp",
-						"MiddleButtonDown"
-						)
-					</OnLoad>
 					<OnClick>
-						print("Clicked with", button)
+						self:GetParent():Hide()
 					</OnClick>
 				</Scripts>
 			</Button>
+			<!-- stop close button -->
+
+			<!-- start table list -->
+			<Frame name="$parentTableList">
+				<Size>
+					<AbsDimension x="354" y="225"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP">
+						<Offset>
+							<AbsDimension x="0" y="-26"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border" tile="true">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+					<TileSize>
+						<AbsValue val="16"/>
+					</TileSize>
+				</Backdrop>
+				<Frames>
+					<Button inherits="Poker_TableBrowserHeader" name="$parentHeaderName" id="1" text="POKER_BROWSER_NAME">
+						<Size>
+							<AbsDimension x="138" y="24"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT">
+								<Offset>
+									<AbsDimension x="4" y="-4"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+					</Button>
+					<Button inherits="Poker_TableBrowserHeader" name="$parentHeaderHost" id="2" text="POKER_BROWSER_HOST">
+						<Size>
+							<AbsDimension x="80" y="24"/>
+						</Size>
+						<Anchors>
+							<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderName"/>							
+						</Anchors>
+					</Button>
+					<Button inherits="Poker_TableBrowserHeader" name="$parentHeaderPlayers" id="3" text="POKER_BROWSER_PLAYERS">
+						<Size>
+							<AbsDimension x="50" y="24"/>
+						</Size>
+						<Anchors>
+							<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderHost"/>						
+						</Anchors>
+					</Button>
+					<Button inherits="Poker_TableBrowserHeader" name="$parentHeaderBlinds" id="5" text="POKER_BROWSER_BLINDS">
+						<Size>
+							<AbsDimension x="60" y="24"/>
+						</Size>
+						<Anchors>
+							<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderPlayers"/>								
+						</Anchors>
+					</Button>
+				</Frames>
+			</Frame>
+			<!-- stop table list -->
 		</Frames>
-	</Frame>
-	<Frame name="Poker_TableBrowserX" parent="UIParent" inherits="BackdropTemplate" movable="true" enableMouse="true" clampedToScreen="true">
-		<KeyValues>
-			<KeyValue key="backdropInfo" value="BACKDROP_DIALOG_32_32" type="global" />
-		</KeyValues>
-		<Size>
-			<AbsDimension x="384" y="350" />
-		</Size>
-		<Anchors>
-			<Anchor point="LEFT" relativePoint="CENTER">
-				<Offset>
-					<AbsDimension x="-200" y="0" />
-				</Offset>
-			</Anchor>
-		</Anchors>
-		<Layers>
-			<Layer>
-				<Texture name="$parentTitle" file="Interface\DialogFrame\UI-DialogBox-Header">
-					<Size>
-						<AbsDimension x="375" y="64" />
-					</Size>
-					<Anchors>
-						<Anchor point="TOP">
-							<Offset>
-								<AbsDimension x="0" y="12" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</Texture>
-				<FontString inherits="GameFontNormal" text="POKER_BROWSER_TITLE">
-					<Anchors>
-						<Anchor point="TOP" relativeTo="$parentTitle">
-							<Offset>
-								<AbsDimension x="0" y="-14" />
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Scripts>
-			<OnLoad></OnLoad>
-		</Scripts>
-	</Frame>
+
+	</Frame>	
 </Ui>
