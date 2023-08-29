@@ -35,8 +35,74 @@
 	<!-- stop table browser header template -->
 
 	<!-- start table browser entry template -->
-	<Button name="Poker_TableBrowserEntry" virtual="true">
-		
+	<Button name="Poker_TableBrowserEntry" hidden="true" virtual="true">
+		<Size>
+			<AbsDimension x="328" y="24"/>
+		</Size>
+		<Layers>
+			<Layer>
+				<FontString name="$parentName" justifyH="LEFT" inherits="GameFontNormalSmall">
+					<Size>
+						<AbsDimension x="138" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentHost" justifyH="LEFT" inherits="GameFontNormalSmall">
+					<Size>
+						<AbsDimension x="80" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentName"/>												
+					</Anchors>
+				</FontString>
+				<FontString name="$parentPlayers" justifyH="LEFT" inherits="GameFontNormalSmall">
+					<Size>
+						<AbsDimension x="50" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHost"/>
+					</Anchors>
+				</FontString>
+				<FontString name="$parentBlinds" justifyH="LEFT" inherits="GameFontNormalSmall">
+					<Size>
+						<AbsDimension x="60" y="24"/>
+					</Size>
+					<Anchors>
+						<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentPlayers"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				getglobal(self:GetName().."BG"):Hide()
+			</OnLoad>
+			<OnClick>
+				if not Poker_TableBrowser.IsSelected(self:GetID()) then
+					Poker_TableBrowser.SelectEntry(self:GetID())
+				end
+			</OnClick>
+			<OnDoubleClick>
+				Poker_TableBrowser.JoinSelectedTable()
+			</OnDoubleClick>
+			<OnEnter>
+				getglobal(self:GetName().."BG"):Hide()
+			</OnEnter>
+			<OnLeave>
+				if not Poker_TableBrowser.IsSelected(self:GetID()) then
+					getglobal(self:GetName().."BG"):Hide()
+				end
+			</OnLeave>
+		</Scripts>
+		<NormalTexture name="$parentBG">
+			<Color r="0" g="0" b="0.5" a="0.25"/>
+		</NormalTexture>
 	</Button>
 	<!-- stop table browser entry template -->
 	
@@ -169,9 +235,82 @@
 							<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentHeaderPlayers"/>								
 						</Anchors>
 					</Button>
+					<ScrollFrame name="$parentScrollFrame" inherits="FauxScrollFrameTemplate">
+						<Size>
+							<AbsDimension x="16" y="216"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPRIGHT">
+								<Offset>
+									<AbsDimension x="-27" y="-5"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnVerticalScroll>
+								FauxScrollFrame_OnVerticalScroll(self, offset, 24, Poker_TableBrowser.Update)
+							</OnVerticalScroll>
+						</Scripts>
+					</ScrollFrame>
 				</Frames>
+				<Scripts>
+					<OnMouseWheel>
+						ScrollFrameTemplate_OnMouseWheel(Poker_TableBrowserTableListScrollFrame, delta)
+					</OnMouseWheel>
+				</Scripts>
 			</Frame>
 			<!-- stop table list -->
+			<Button name="$parentJoin" text="POKER_BROWSER_JOIN" inherits="UIPanelButtonTemplate">
+				<Size>
+					<AbsDimension x="100" y="24"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$parentTableList">
+						<Offset>
+							<AbsDimension x="4" y="-8"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Poker_TableBrowser.JoinSelectedTable()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentEnterName" text="POKER_BROWSER_ENTER_NAME" inherits="UIPanelButtonTemplate">
+				<Size>
+					<AbsDimension x="100" y="24"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentJoin">
+						<Offset>
+							<AbsDimension x="23" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Poker_TableBrowser.ShowEnterNameDialog()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parentCreateTable" text="POKER_BROWSER_CREATE_TABLE" inherits="UIPanelButtonTemplate">
+				<Size>
+					<AbsDimension x="100" y="24"/>
+				</Size>
+				<Anchors>
+					<Anchor point="LEFT" relativePoint="RIGHT" relativeTo="$parentEnterName">
+						<Offset>
+							<AbsDimension x="23" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						Poker_TableBrowser.ShowCreateTableDialog()
+					</OnClick>
+				</Scripts>
+			</Button>
 		</Frames>
 
 	</Frame>	
